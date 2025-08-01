@@ -18,4 +18,4 @@ def register(request):
       return redirect('learning_logs:index')
   # Display a blank or invalid form.
   context = {'form': form}
-  return render(request, 'users/register.html', context)
+  return render(request, 'registration/register.html', context)
