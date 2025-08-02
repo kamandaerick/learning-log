@@ -3,6 +3,7 @@ from .models import Topic, Entry
 from .forms import TopicForm, EntryForm
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import get_object_or_404
+from django.http import Http404
 
 # Create your views here.
 def index(request):
@@ -20,6 +21,9 @@ def topics(request):
 def topic(request, topic_id):
   '''Show a single topic and all its entries'''
   topic = get_object_or_404(Topic, id=topic_id)
+  # Make sure the topic belongs to the current user
+  if topic.owner != request.user:
+    raise Http404("You do not have permission to view this topic.")
   entries = topic.entry_set.order_by('-date_added')
   context = {'topic': topic, 'entries': entries}
   return render(request, 'learning_logs/topic.html', context)
